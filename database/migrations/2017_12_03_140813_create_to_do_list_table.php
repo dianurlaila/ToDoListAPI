@@ -17,7 +17,7 @@ class CreateToDoListTable extends Migration
             $table->increments('id');
             $table->string('description');
             $table->string('time');
-            $table->timestamp('date');
+            $table->string('date');
             $table->boolean('status');
             $table->integer('user_id')->unsigned();
             $table->timestamps();

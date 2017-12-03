@@ -10,15 +10,19 @@ use App\Models\ToDoList;
 class ToDoListController extends Controller
 {
 
+
+//    fungsi untuk melihat semua todolist
     public function index(Request $request)
     {
 
-        $todolist = ToDoList::where('user_id', $request->user()->id)->orderBy('id','desc')->get();
+        $todolist = ToDoList::where('user_id', $request->user()->id)->orderBy('id', 'desc')->get();
 
         return response()->json($todolist);
 
     }
 
+
+//    fungsi untuk melihat todolist id tertentu
     public function show(Request $request, $id)
     {
         $todolist = ToDoList::where('id', $id)
@@ -27,6 +31,7 @@ class ToDoListController extends Controller
         return response()->json($todolist);
     }
 
+//    fungsi untuk menambah todolist
     public function create(Request $request)
     {
         $this->validate($request, [
@@ -41,15 +46,16 @@ class ToDoListController extends Controller
         $todolist = $request->user()->todolists()->create([
             'description' => $request->get('description'),
             'time' => $request->get('time'),
-            'date' => Carbon::createFromDate($request->get('year'), $request->get('month'), $request->get('day')),
+            'date'=>Carbon::parse(Carbon::createFromDate($request->get('year'), $request->get('month'), $request->get('day')))->format('d/m/Y'),
             'status' => 0,
         ]);
 
-        return response()->json(['success'=>'berhasil menambah data'],200);
+        return response()->json(['success' => 'berhasil menambah data'], 200);
 
     }
 
 
+//    fungsi untuk mengedit todolist
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -72,14 +78,18 @@ class ToDoListController extends Controller
 
         $todolist->description = $request->get('description');
         $todolist->time = $request->get('time');
-        $todolist->date = Carbon::createFromDate($request->get('year'), $request->get('month'), $request->get('day'));
-        $todolist->status=0;
+        $todolist->date = Carbon::parse(Carbon::createFromDate($request->get('year'), $request->get('month'), $request->get('day')))->format('d/m/Y');
+        $todolist->status = 0;
         $todolist->save();
 
-        return response()->json(['success'=>'berhasil edit data'],200);
+        return response()->json(['success' => 'berhasil edit data'], 200);
     }
 
-    public function destroy(Request $request, $id){
+
+//    fungsi untuk menghapus todolist
+
+    public function destroy(Request $request, $id)
+    {
 
         $todolist = ToDoList::find($id);
         if ($todolist->user_id != $request->user()->id) {
@@ -90,7 +100,82 @@ class ToDoListController extends Controller
         $todolist->delete();
 
         return response()->json(['success' => true,
-            'message'=>'Berhasil Menghapus Data'], 200);
+            'message' => 'Berhasil Menghapus Data'], 200);
+    }
+
+
+//    fungsi untuk check selesai pada todolist tertentu
+    public function checkDone(Request $request, $id)
+    {
+        $todolist = ToDoList::find($id);
+
+        if ($todolist->user_id != $request->user()->id) {
+            return response()->json(['error' => 'anda bukan pemilik list todo ini'], 403);
+
+        }
+
+        $todolist->status = 1;
+
+        $todolist->save();
+
+        return response()->json(['success' => true,
+            'message' => 'List ini di check selesai'], 200);
+    }
+
+
+//    fungsi untuk check belum selesai pada todolist tertentu
+    public function checkUndone(Request $request, $id)
+    {
+        $todolist = ToDoList::find($id);
+
+        if ($todolist->user_id != $request->user()->id) {
+            return response()->json(['error' => 'anda bukan pemilik list todo ini'], 403);
+
+        }
+
+        $todolist->status = 0;
+
+        $todolist->save();
+
+        return response()->json(['success' => true,
+            'message' => 'List ini di check belum selesai'], 200);
+    }
+
+//    fungsi untuk melihat todolist hari ini
+    public function todolistToday(Request $request)
+    {
+
+        $todolist = ToDoList::where('user_id',$request->user()->id)
+                ->where('date',Carbon::parse(Carbon::today('Asia/Jakarta'))->format('d/m/Y'))->get();
+
+        return $todolist;
+
+
+    }
+
+//    todolist kemarin
+    public function todolistYesterday(Request $request)
+    {
+
+        $todolist = ToDoList::where('user_id',$request->user()->id)
+            ->where('date',Carbon::parse(Carbon::yesterday('Asia/Jakarta'))->format('d/m/Y'))->get();
+
+        return $todolist;
+
+
+    }
+
+
+//todolist besok
+    public function todolistTommorow(Request $request)
+    {
+
+        $todolist = ToDoList::where('user_id',$request->user()->id)
+            ->where('date',Carbon::parse(Carbon::tomorrow('Asia/Jakarta'))->format('d/m/Y'))->get();
+
+        return $todolist;
+
+
     }
 
 }

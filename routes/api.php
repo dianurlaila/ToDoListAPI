@@ -43,6 +43,25 @@ Route::group(['middleware'=>['api']], function(){
         //        delete list
         Route::delete('/todolistitems/{id}','ToDoListController@destroy');
 
+        //        Check done
+        Route::post('/checkDone/{id}','ToDoListController@checkDone');
+
+        //        Check done
+        Route::post('/checkUndone/{id}','ToDoListController@checkUndone');
+
+
+//        todolist today
+        Route::get('/todolistitems-today','ToDoListController@todolistToday');
+
+//        todolist yesterday
+        Route::get('/todolistitems-yesterday','ToDoListController@todolistYesterday');
+
+//        todolist tommorow
+        Route::get('/todolistitems-tommorow','ToDoListController@todolistTommorow');
+
+
+
+
     });
 
 });
