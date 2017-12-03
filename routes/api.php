@@ -29,8 +29,19 @@ Route::group(['middleware'=>['api']], function(){
         Route::get('/profile','UserController@show');
 
 //        todolist
+
+//        lihat semua list
         Route::get('/todolistitems','ToDoListController@index');
+//        lihat spesific list
+        Route::get('/todolistitems/{id}','ToDoListController@show');
+//        tambah list
         Route::post('/todolistitem','ToDoListController@create');
+
+//        edit list
+        Route::put('/todolistitems/{id}','ToDoListController@update');
+
+        //        delete list
+        Route::delete('/todolistitems/{id}','ToDoListController@destroy');
 
     });
 
