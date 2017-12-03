@@ -26,4 +26,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function todolists(){
+        return $this->hasMany('App\Models\ToDoList');
+    }
 }

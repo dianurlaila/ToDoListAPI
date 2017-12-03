@@ -28,6 +28,10 @@ Route::group(['middleware'=>['api']], function(){
 
         Route::get('/profile','UserController@show');
 
+//        todolist
+        Route::get('/todolistitems','ToDoListController@index');
+        Route::post('/todolistitem','ToDoListController@create');
+
     });
 
 });
