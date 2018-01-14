@@ -59,6 +59,8 @@ Route::group(['middleware'=>['api']], function(){
 //        todolist tommorow
         Route::get('/todolistitems-tommorow','ToDoListController@todolistTommorow');
 
+        Route::get('/todolistitems-yearweek','ToDoListController@todolistYearweek');
+
 
 
 

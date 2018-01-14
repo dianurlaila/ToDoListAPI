@@ -14,7 +14,10 @@ class ToDoListController extends Controller
 //    fungsi untuk melihat semua todolist
     public function index(Request $request)
     {
-
+        // variabel $todolist mengambil data dari table todolist di database, 
+        // baris 19 artinya, mengambil data yang user_id sama dengan user id pengguna yang akses, terus
+        // oerderBy itu artinya diurutkan descending atau id yang paling besar ke kecil, terus arti
+        // arti get mengambil semua data dari perintah sebelumnya.
         $todolist = ToDoList::where('user_id', $request->user()->id)->orderBy('id', 'desc')->get();
 
         return response()->json($todolist);
@@ -24,7 +27,8 @@ class ToDoListController extends Controller
 
 //    fungsi untuk melihat todolist id tertentu
     public function show(Request $request, $id)
-    {
+    {   
+        // todolist ini mengecek, 
         $todolist = ToDoList::where('id', $id)
             ->where('user_id', $request->user()->id)->first();
 
@@ -172,6 +176,17 @@ class ToDoListController extends Controller
 
         $todolist = ToDoList::where('user_id',$request->user()->id)
             ->where('date',Carbon::parse(Carbon::tomorrow('Asia/Jakarta'))->format('d/m/Y'))->get();
+
+        return $todolist;
+
+
+    }
+
+    public function todolistYearweek(Request $request)
+    {
+
+        $todolist = ToDoList::where('user_id',$request->user()->id)
+            ->where('date',Carbon::parse(Carbon::yearweek('Asia/Jakarta'))->format('d/m/Y'))->get();
 
         return $todolist;
 
